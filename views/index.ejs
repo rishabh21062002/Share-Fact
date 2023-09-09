@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Share Facts</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/queries.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="main-header">
+        <div class="nav-bar">
+          <h1 class="heading-primary">
+            <ion-icon
+              name="chatbox-ellipses-outline"
+              class="heading-icon"
+            ></ion-icon>
+            <span class="heading-primary-text">what i learned today</span>
+          </h1>
+          <button class="add-facts-button">Share A Fact</button>
+
+          <ion-icon name="add-outline" class="add-icon display-none"></ion-icon>
+        </div>
+        <div class="form-container form-invisible">
+          <form action="/facts?hastag=All" method="POST" id="form">
+            <span class="fact-input">
+              <input
+                id="fact-input"
+                type="text"
+                name="factText"
+                placeholder="Share a fact with the world ..."
+                autocomplete="off"
+                required
+              />
+              <span id="num-words">200</span></span
+            >
+            <input
+              type="text"
+              name="factSource"
+              class="fact-source"
+              placeholder="Trustworthy Source"
+              autocomplete="off"
+              required
+            />
+            <select name="factCategory" class="fact-category" required>
+              <option value="">choose category</option>
+              <option value="Technology">Technology</option>
+              <option value="Science">Science</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Society">Society</option>
+              <option value="Finance">Finance</option>
+              <option value="Health">Health</option>
+              <option value="History">History</option>
+              <option value="News">News</option>
+            </select>
+            <button type="submit" class="form-button">Post</button>
+          </form>
+        </div>
+      </header>
+
+      <section class="grid-container">
+        <div class="buttons-section">
+          <a class="grid-btns gradient-all" href="/">All</a>
+
+          <!-- <button class="grid-btns color-green" name="Technology"></button>
+            <button class="grid-btns color-red" name="Science"></button>
+            <button class="grid-btns color-blue" name="Entertainment"></button>
+            <button class="grid-btns color-yellow" name="News"></button>
+            <button class="grid-btns color-darkpink" name="Society"></button>
+            <button class="grid-btns color-orange" name="Finance"></button>
+            <button class="grid-btns color-violet" name="Health"></button> -->
+          <a class="grid-btns color-red" href="?category=Science">Science</a>
+          <a class="grid-btns color-yellow" href="?category=News">News</a>
+          <a class="grid-btns color-darkpink" href="?category=Society"
+            >Society</a
+          >
+          <a class="grid-btns color-orange" href="?category=Finance">Finance</a>
+          <a class="grid-btns color-violet" href="?category=Health">Health</a>
+          <a class="grid-btns color-peach" href="?category=History">History</a>
+          <a class="grid-btns color-blue" href="?category=Entertainment"
+            >Entertainment</a
+          >
+          <a class="grid-btns color-green" href="?category=Technology"
+            >Technology</a
+          >
+        </div>
+        <div class="facts-section">
+          <div class="main-area">
+            <ul class="fact-list">
+              <% for(let i =0 ; i < list.length ;i++){ %> <% var dis =
+              (!list[i].disputed) ? "display-none" : "" %>
+              <li class="single-fact">
+                <div class="fact-content">
+                  <div class="fact-text-source">
+                    <span>
+                      <span
+                        class="disputed-fact <%= dis %>"
+                        id="dis<%=list[i]._id%>"
+                        >👎 - Disputed Fact</span
+                      >
+                      <%= list[i].factText %>
+                      <a
+                        href="<%= list[i].source %>"
+                        target="_blank"
+                        class="fact-source-link"
+                        >(Source)</a
+                      >
+                    </span>
+                  </div>
+                  <div class="color-blue fact-cat">
+                    <span class=""><%= list[i].category %></span>
+                  </div>
+                </div>
+                <div class="rxn-container">
+                  <div class="good-rxn b<%=list[i]._id%>">
+                    <button
+                      onclick="like(this.name ,0)"
+                      name="<%=JSON.stringify(list[i]) %>"
+                    >
+                      👍
+                      <span id="s<%=list[i]._id%>0"
+                        ><%= list[i].numOfLikes[0] %></span
+                      >
+                    </button>
+                  </div>
+                  <div class="mind-blowing-rxn b<%=list[i]._id%>">
+                    <button
+                      name="<%=JSON.stringify(list[i]) %>"
+                      onclick="like(this.name , 1)"
+                    >
+                      🤩
+                      <span id="s<%=list[i]._id%>1"
+                        ><%= list[i].numOfLikes[1] %></span
+                      >
+                    </button>
+                  </div>
+                  <div class="disputed-rxn b<%=list[i]._id%>">
+                    <button
+                      name="<%=JSON.stringify(list[i]) %>"
+                      onclick="like(this.name , 2)"
+                    >
+                      👎
+                      <span id="s<%=list[i]._id%>2"
+                        ><%= list[i].numOfLikes[2] %></span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </li>
+              <% } %>
+            </ul>
+          </div>
+          <p class="total-text">
+            There are <span class="total-facts"><%= list.length %></span> facts
+            in database. Add your own!
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="script/script.js"></script>
+  </body>
+</html>
